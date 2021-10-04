@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="student">
+	<insert id="insertStudent">
+		INSERT INTO STUDENT VALUES(SEQ_STUDENT.NEXTVAL,'유병승','0101234534',
+		'TEST@TEST.COM','경기도시흥시',DEFAULT)
+	</insert>
+	<insert id="insertStudentName" parameterType="string">
+		INSERT INTO STUDENT VALUES(SEQ_STUDENT.NEXTVAL,#{name},'0101234534',
+		'TEST@TEST.COM','경기도시흥시',DEFAULT)
+	</insert>
+	<insert id="insertStudentData" parameterType="com.mybatis.model.vo.Student">
+		INSERT INTO STUDENT VALUES(SEQ_STUDENT.NEXTVAL,#{studentName},#{studentTel},
+		'TEST@TEST.COM',#{studentAddr},DEFAULT)
+	</insert>
+	<update id="updateStudent" parameterType="com.mybatis.model.vo.Student">
+		UPDATE STUDENT SET STUDENT_TEL=#{studentTel},STUDENT_EMAIL=#{studentEmail},STUDENT_ADDR=#{studentAddr} WHERE STUDENT_NO=${studentNo}
+	</update>
+	<delete id="deleteStudent" parameterType="_int">
+		DELETE FROM STUDENT WHERE STUDENT_NO=#{no}
+	</delete>
+	<!-- 	select문 작성하기 
+		<select>태그를 이용함
+		id 이름,parameterType 전달된데이터의 자료형,
+		resultType||resultMap:반황형 row와 매칭되는 객체를 지정
+	-->
+	
+	<select id="selectCount" resultType="_int">
+		SELECT COUNT(*) FROM STUDENT
+	</select>
+	<!-- 자동으로 Result의 결과가 Vo객체에 대입(mapping)되려면 resultSet의 컬럼명과 
+	vo객체의 멤버변수명이 대소문자 구별없이 돌일해야한다. -->
+	<select id="selectStudentOne" parameterType="_int" resultMap="studentMap">
+		SELECT * FROM STUDENT WHERE STUDENT_NO=#{no}
+	</select>
+	
+	<resultMap type="com.mybatis.model.vo.Student" id="studentMap">
+<!-- 		id태그,->pk컬럼에 대한 설정  result태그 -->
+		<result column="student_no" property="studentNo"/>
+		<result column="student_name" property="studentName"/>
+		<result column="student_tel" property="studentTel"/>
+		<result column="student_email" property="studentEmail"/>
+		<result column="student_addr" property="studentAddr"/>
+	</resultMap>
+	
+<!-- 	<select id="selectTest" resultMap="studentMap">
+		SELECT * FROM STUDENT STUDENT_NO=#{A} AND STUDENT_NAME${NAME}
+	</select> -->
+	
+	<select id="selectStudentAll" resultMap="studentMap">
+		SELECT * FROM STUDENT
+	</select>
+	
+<!-- 	map으로 데이터받기 -->
+	<select id="selectStudentMap" resultType="map">
+		SELECT * FROM STUDENT WHERE STUDENT_NO=#{no}
+	</select>
+
+</mapper>
